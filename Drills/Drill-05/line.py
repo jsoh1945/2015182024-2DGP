@@ -7,13 +7,11 @@ KPU_HEIGHT, KPU_WIDTH = 720, 1280
 
 
 def draw_line(p1, p2):
+    global Cx, Cy
     for i in range(0, 100 + 1, 5):
         t = i / 100
-        x = (1 - t) * p1[0] + t * p2[0]
-        y = (1 - t) * p1[1] + t * p2[1]
-        character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
-
-    character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
+        Cx = (1 - t) * p1[0] + t * p2[0]
+        Cy = (1 - t) * p1[1] + t * p2[1]
 
     pass
 
