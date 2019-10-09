@@ -52,3 +52,4 @@ while True:
     draw10Points(points[0],points[1],points[2],points[3],points[4],points[5],points[6],points[7],points[8],points[9])
 
 
+ 
