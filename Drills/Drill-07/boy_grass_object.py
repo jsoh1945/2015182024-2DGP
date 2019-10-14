@@ -34,7 +34,7 @@ class BBall:
         self.image.draw(self.x,self.y)
 
     def update(self):
-        if self.y <= 80:
+        if self.y <= 70:
             pass
         else:
             self.y -= self.speed
