@@ -1,6 +1,7 @@
 from pico2d import *
 import random
 
+
 class Boy:
     def __init__(self):
         self.x = random.randint(100,700)
