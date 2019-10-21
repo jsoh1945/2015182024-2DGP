@@ -9,6 +9,7 @@ pause_image = None
 def enter():
     global pause_image
     pause_image = load_image('pause.png')
+
     pass
 
 
@@ -19,7 +20,7 @@ def exit():
 
 def draw():
     clear_canvas()
-    pause_image.draw(400,300)
+    pause_image.draw(400,300,400,400)
     update_canvas()
     pass
 
@@ -31,5 +32,5 @@ def handle_events():
 
 def update():
     clear_canvas()
-    pause_image.draw(400, 300)
+    pause_image.draw(400, 300,400,400)
     update_canvas()
