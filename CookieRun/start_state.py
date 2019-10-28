@@ -1,6 +1,8 @@
 import game_framework
 from pico2d import *
 import title_state
+import main_state
+
 
 LEN = 800
 WID = 600
@@ -53,6 +55,8 @@ def handle_events():
             print(event.y)
             if event.x < 650+125 and event.x > 650-125 and event.y < 100+50 and event.y > 100-50:
                 game_framework.change_state(title_state)
+            elif event.x < 400+100 and event.x > 400-100 and event.y < 500+30 and event.y > 500-30:
+                game_framework.change_state(main_state)
     pass
 
 
