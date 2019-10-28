@@ -11,11 +11,12 @@ class Grass:
 
 
 class Boy:
-
+    image = None
     def __init__(self):
         self.x, self.y = random.randint(100, 700), 90
         self.frame = random.randint(0, 7)
-        self.image = load_image('run_animation.png')
+        if Boy.image == None:
+            Boy.image = load_image('run_animation.png')
 
 
     def update(self):
@@ -43,7 +44,7 @@ team = [Boy() for i in range(1000)]
 
 grass = Grass()
 
-running = True;
+running = True
 while running:
     handle_events()
 
