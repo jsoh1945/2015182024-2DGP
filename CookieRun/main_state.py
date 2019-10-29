@@ -32,6 +32,7 @@ class Background:
 character = None
 ground = None
 bg = None
+
 def enter():
     global ground, character, bg
     character = Cookie()
