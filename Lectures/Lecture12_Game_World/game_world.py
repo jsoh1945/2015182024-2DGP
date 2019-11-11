@@ -7,6 +7,9 @@ objects = [[],[]]
 def add_object(o, layer):
     objects[layer].append(o)
 
+def add_objects(l, layer):
+    objects[layer] += l
+
 
 def remove_object(o):
     for i in range(len(objects)):
@@ -18,13 +21,7 @@ def remove_object(o):
 
 def clear():
     for o in all_objects():
-        del o
-    for l in objects:
-        l.clear()
-
-def destroy():
-    clear()
-    objects.clear()
+        remove_object(o)
 
 
 def all_objects():
