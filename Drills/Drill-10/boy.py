@@ -6,17 +6,17 @@ import game_world
 
 # Boy Run Speed
 # fill expressions correctly
-PIXEL_PER_METER = 0
-RUN_SPEED_KMPH = 0
-RUN_SPEED_MPM = 0
-RUN_SPEED_MPS = 0
-RUN_SPEED_PPS = 0
+PIXEL_PER_METER = (30.0/0.3)
+RUN_SPEED_KMPH = 20.0
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0 )
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 # Boy Action Speed
 # fill expressions correctly
-TIME_PER_ACTION = 0
-ACTION_PER_TIME = 0
-FRAMES_PER_ACTION = 0
+TIME_PER_ACTION = 0.7
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8
 
 
 
@@ -56,24 +56,27 @@ class IdleState:
 
     @staticmethod
     def do(boy):
-        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        boy.frame_x = (boy.frame_x + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 14
+        boy.frame_y = 2 - (boy.frame_x // 5)
         boy.timer -= 1
-        if boy.timer == 0:
-            boy.add_event(SLEEP_TIMER)
 
     @staticmethod
     def draw(boy):
-        if boy.dir == 1:
-            boy.image.clip_draw(int(boy.frame) * 100, 300, 100, 100, boy.x, boy.y)
-        else:
-            boy.image.clip_draw(int(boy.frame) * 100, 200, 100, 100, boy.x, boy.y)
-
+         boy.image.clip_draw(int(boy.frame_x % 5) * 183, int(boy.frame_y) * 167, 180, 167, boy.x, boy.y)
 
 class RunState:
 
     @staticmethod
     def enter(boy, event):
-        # fill here
+        if event == RIGHT_DOWN:
+            boy.velocity += RUN_SPEED_PPS
+        elif event == LEFT_DOWN:
+            boy.velocity -= RUN_SPEED_PPS
+        elif event == RIGHT_UP:
+            boy.velocity -= RUN_SPEED_PPS
+        elif event == LEFT_UP:
+            boy.velocity += RUN_SPEED_PPS
+        boy.dir = clamp(-1,boy.velocity,1)
         pass
 
     @staticmethod
@@ -83,16 +86,14 @@ class RunState:
 
     @staticmethod
     def do(boy):
-        boy.frame = (boy.frame + 1) % 8
-        # fill here
+        boy.frame_x = (boy.frame_x + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 14
+        boy.x += boy.velocity * game_framework.frame_time
+        boy.frame_y = 2 - (boy.frame_x // 5)
         boy.x = clamp(25, boy.x, 1600 - 25)
 
     @staticmethod
     def draw(boy):
-        if boy.dir == 1:
-            boy.image.clip_draw(int(boy.frame) * 100, 100, 100, 100, boy.x, boy.y)
-        else:
-            boy.image.clip_draw(int(boy.frame) * 100, 0, 100, 100, boy.x, boy.y)
+        boy.image.clip_draw(int(boy.frame_x % 5) * 183, int(boy.frame_y) * 167, 180, 167, boy.x, boy.y)
 
 
 class SleepState:
@@ -107,14 +108,15 @@ class SleepState:
 
     @staticmethod
     def do(boy):
-        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        boy.frame_x = (boy.frame_x + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+
 
     @staticmethod
     def draw(boy):
         if boy.dir == 1:
-            boy.image.clip_composite_draw(int(boy.frame) * 100, 300, 100, 100, 3.141592 / 2, '', boy.x - 25, boy.y - 25, 100, 100)
+            boy.image.clip_composite_draw(int(boy.frame_x) * 100, 300, 100, 100, 3.141592 / 2, '', boy.x - 25, boy.y - 25, 100, 100)
         else:
-            boy.image.clip_composite_draw(int(boy.frame) * 100, 200, 100, 100, -3.141592 / 2, '', boy.x + 25, boy.y - 25, 100, 100)
+            boy.image.clip_composite_draw(int(boy.frame_x) * 100, 200, 100, 100, -3.141592 / 2, '', boy.x + 25, boy.y - 25, 100, 100)
 
 
 
@@ -130,13 +132,14 @@ next_state_table = {
 class Boy:
 
     def __init__(self):
-        self.x, self.y = 1600 // 2, 90
+        self.x, self.y = 1600 // 2, 800 // 4
         # Boy is only once created, so instance image loading is fine
-        self.image = load_image('animation_sheet.png')
-        # fill here
+        self.image = load_image('bird_animation.png')
+        self.font = load_font("ENCR10B.TTF", 16)
         self.dir = 1
         self.velocity = 0
-        self.frame = 0
+        self.frame_x = 0
+        self.frame_y = 0
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
@@ -160,7 +163,7 @@ class Boy:
 
     def draw(self):
         self.cur_state.draw(self)
-        # fill here
+        self.font.draw(self.x-60,self.y+50, '(Time: %3.2f)' % get_time(),(255,255,0))
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
