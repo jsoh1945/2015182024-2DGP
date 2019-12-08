@@ -11,14 +11,16 @@ startImage = None
 startButton = None
 gotoHelp = None
 logo_time = 0.0
-
+sound = None
 
 def enter():
-    global startImage, startButton, gotoHelp
+    global startImage, startButton, gotoHelp, sound
     startImage = load_image('..\\CookieRun\\image_source\\title.png')
     startButton = load_image('..\\CookieRun\\image_source\\GameStart_button.png')
     gotoHelp = load_image('..\\CookieRun\\image_source\\help.png')
-
+    sound = load_music('Title.mp3')
+    sound.set_volume(32)
+    sound.repeat_play()
     pass
 
 

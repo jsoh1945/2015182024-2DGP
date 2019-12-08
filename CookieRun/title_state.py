@@ -8,9 +8,9 @@ name = "TitleState"
 helpImage = None
 titleImage = None
 backImage = None
-
+sound = None
 def enter():
-    global helpImage, titleImage, backImage
+    global helpImage, titleImage, backImage, sound
     helpImage = load_image('..\\CookieRun\\image_source\\key.png')
     titleImage = load_image ('..\\CookieRun\\image_source\\title.png')
     backImage = load_image('..\\CookieRun\\image_source\\back.png')
@@ -41,11 +41,6 @@ def draw():
     backImage.draw(650,100)
     update_canvas()
     pass
-
-
-
-
-
 
 
 def update():
